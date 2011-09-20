@@ -42,6 +42,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/cryptopp/cryptlib.h \
     src/cryptopp/cpu.h \
     src/cryptopp/config.h \
+    src/scrypt/scrypt.h \
     src/strlcpy.h \
     src/main.h \
     src/net.h \
@@ -90,6 +91,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
     src/cryptopp/sha.cpp \
     src/cryptopp/cpu.cpp \
+    src/scrypt/scrypt.c \
     src/util.cpp \
     src/script.cpp \
     src/main.cpp \
