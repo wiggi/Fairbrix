@@ -93,7 +93,7 @@ int GetCoinbase_maturity()
     if (fTestNet_config && mapArgs.count("-coinbase_maturity"))
        {
            int ncoinbase_maturity = atoi(mapArgs["-coinbase_maturity"]);
-           //printf("COINBASE_MATURITY = %u set in config bitcoin.config \n",ncoinbase_maturity);          
+           //printf("COINBASE_MATURITY = %u set in config tenebrix.config \n",ncoinbase_maturity);          
            return atoi(mapArgs["-coinbase_maturity"]);                    
        }
        else
@@ -112,7 +112,7 @@ int GetArgIntxx(int udefault, const char* argument)
         stringstream convert(mapArgs[argument]);
         if ( !(convert >> uvalue)) 
             uvalue = 0;
-        printf("argument %s  found in bitcoin.conf with uint %u being used  \n",argument,uvalue);
+        printf("argument %s  found in tenebrix.conf with uint %u being used  \n",argument,uvalue);
         return uvalue;
     }
     return udefault;
@@ -128,7 +128,7 @@ int64 GetArgmInt64(int64 udefault,const char* argument)
         stringstream convert(mapArgs[argument]);
         if ( !(convert >> uvalue)) 
             uvalue = 0;
-        printf("argument %s  found in bitcoin.conf with uint %u being used  \n",argument,uvalue);
+        printf("argument %s  found in tenebrix.conf with uint %u being used  \n",argument,uvalue);
         return uvalue;
     }
     return udefault;
@@ -143,7 +143,7 @@ char* GetArgString(const char* strdefault,const char* argument)
         char * strFound;
         //strcpy(strFound, mapArgs[argument]); 
         strFound = mapArgs[argument].c_str;  
-        printf("argument %s found in bitcoin.conf with string %s being used \n",argument,strFound);
+        printf("argument %s found in tenebrix.conf with string %s being used \n",argument,strFound);
         //return mapArgs[argument];
         return strFound;
     }
@@ -440,7 +440,7 @@ bool CTransaction::AcceptToMemoryPool(CTxDB& txdb, bool fCheckInputs, bool* pfMi
 
 
     // Rather not work on nonstandard transactions
-    // to enable running scripts add -nonstandard in bitcoin.conf by sacarlson
+    // to enable running scripts add -nonstandard in tenebrix.conf by sacarlson
     if (!fTestNet && !IsStandard())
     {
         if (!mapArgs.count("-nonstandard"))
@@ -730,9 +730,10 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
             nSubsidy = GetArgIntxx(.01,"-post_Subsidy") * COIN;
         printf("nSubsidy before shift =   %lu  GetArgInt-Subsidy = %u or %lu\n",nSubsidy,GetArgIntxx(50,"-Subsidy"),GetArgIntxx(50,"-Subsidy"));
     }
-    // Subsidy is cut in half every 4 years
+    // Subsidy is cut in half every 4 years no more :)
     //nSubsidy >>= (nHeight / 210000);
-    nSubsidy >>= (nHeight / (GetMaxMoney()/COIN/100));
+    //nSubsidy >>= (nHeight / (GetMaxMoney()/COIN/100));
+	//
     printf("nHeight = %u  nSbsidy = %lu nFees = %ld \n",nHeight,nSubsidy,nFees);
     printf("GetMaxMoney()/COIN/10 = %u \n",(GetMaxMoney()/COIN));
 
@@ -741,8 +742,8 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
 
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast)
 {
-    const int64 nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-    const int64 nTargetSpacing = 10 * 60;
+    const int64 nTargetTimespan = 7 * 24 * 60 * 60; // two weeks
+    const int64 nTargetSpacing = 5 * 60;
     const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
     // Genesis block
@@ -753,9 +754,14 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast)
     if ((pindexLast->nHeight+1) % nInterval != 0)
         return pindexLast->nBits;
 
-    // Go back by what we want to be 14 days worth of blocks
+	 // Go back the full period unless it's the first retarget after genesis. Code courtesy of Art Forz
+    int blockstogoback = nInterval-1;
+    if(GetBoolArg("-enablefullretargetperiod") && ((pindexLast->nHeight+1) != nInterval))
+        blockstogoback = nInterval;
+
+	    // Go back by what we want to be 14 days worth of blocks
     const CBlockIndex* pindexFirst = pindexLast;
-    for (int i = 0; pindexFirst && i < nInterval-1; i++)
+    for (int i = 0; pindexFirst && i < blockstogoback; i++)
         pindexFirst = pindexFirst->pprev;
     assert(pindexFirst);
 
@@ -1329,7 +1335,7 @@ bool CBlock::CheckBlock() const
         return error("CheckBlock() : proof of work failed");
 
     // Check timestamp
-    if (GetBlockTime() > GetAdjustedTime() + 2 * 60 * 60)
+    if (GetBlockTime() > GetAdjustedTime() + 1 * 60 * 60)
         return error("CheckBlock() : block timestamp too far in the future");
 
     // First transaction must be coinbase, the rest must not be
@@ -1590,7 +1596,7 @@ bool LoadBlockIndex(bool fAllowNew)
         if (fTestNet_config && mapArgs.count("-genesisblock"))
         {
             hashGenesisBlock = uint256(mapArgs["-genesisblock"]);
-            printf("hashGenesisBlock custom configured by -genesisblock in bitcoin.conf \n");
+            printf("hashGenesisBlock custom configured by -genesisblock in tenebrix.conf \n");
         }
         else
         {
@@ -1684,7 +1690,7 @@ bool LoadBlockIndex(bool fAllowNew)
             stringstream convert(mapArgs["-block_nTime"]);
             if ( !(convert >> block.nTime)) 
                 block.nTime = 0;
-            printf("block.nTime custom configured by -block_nTime in bitcoin.conf \n");
+            printf("block.nTime custom configured by -block_nTime in tenebrix.conf \n");
        }
              
        if (fTestNet_config && mapArgs.count("-block_nBits"))
@@ -1692,7 +1698,7 @@ bool LoadBlockIndex(bool fAllowNew)
            stringstream convert(mapArgs["-block_nBits"]);
            if ( !(convert >> block.nBits)) 
                block.nBits = 0;
-           printf("block.nBits custom configured by -block_nBits in bitcoin.conf \n");
+           printf("block.nBits custom configured by -block_nBits in tenebrix.conf \n");
        }
          
        if (fTestNet_config && mapArgs.count("-block_nNonce"))
@@ -1700,7 +1706,7 @@ bool LoadBlockIndex(bool fAllowNew)
            stringstream convert(mapArgs["-block_nNonce"]);
            if ( !(convert >> block.nNonce)) 
                block.nNonce = 0;
-           printf("block.nNonce custom configured by -block_nNonce in bitcoin.conf \n");
+           printf("block.nNonce custom configured by -block_nNonce in tenebrix.conf \n");
        }
          
        printf("block.nTime = %u \n", block.nTime);
@@ -1744,7 +1750,7 @@ bool LoadBlockIndex(bool fAllowNew)
         if (fTestNet_config && mapArgs.count("-block_hashMerkleRoot"))
         {
             assert(block.hashMerkleRoot == uint256(mapArgs["-block_hashMerkleRoot"].c_str()));
-            printf("block.hashMerkleRoot custom configured by -block_hashMerkleRoot in bitcoin.conf \n");
+            printf("block.hashMerkleRoot custom configured by -block_hashMerkleRoot in tenebrix.conf \n");
         }
         else
         {

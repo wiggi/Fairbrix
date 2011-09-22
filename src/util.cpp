@@ -708,7 +708,7 @@ void GetDataDir(char* pszDir)
         char* p = pszDir + strlen(pszDir);
         if (p > pszDir && p[-1] != '/' && p[-1] != '\\')
             *p++ = '/';
-        strcpy(p, "testnet");
+        strcpy(p, "tenebrix");
         nVariation += 2;
     }
     static bool pfMkdir[4];
@@ -729,7 +729,7 @@ string GetDataDir()
 string GetConfigFile()
 {
     namespace fs = boost::filesystem;
-    fs::path pathConfig(GetArg("-conf", "bitcoin.conf"));
+    fs::path pathConfig(GetArg("-conf", "tenebrix.conf"));
     if (!pathConfig.is_complete())
         pathConfig = fs::path(GetDataDir()) / pathConfig;
     return pathConfig.string();
@@ -750,7 +750,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
     
     for (pod::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
     {
-        // Don't overwrite existing settings so command line settings override bitcoin.conf
+        // Don't overwrite existing settings so command line settings override tenebrix.conf
         string strKey = string("-") + it->string_key;
         if (mapSettingsRet.count(strKey) == 0)
             mapSettingsRet[strKey] = it->value[0];
