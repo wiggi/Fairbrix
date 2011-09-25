@@ -42,7 +42,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="labelBalance">
         <property name="text">
-         <string>123.456 BTC</string>
+         <string>123.456 TBX</string>
         </property>
        </widget>
       </item>

@@ -659,12 +659,12 @@ string MyGetSpecialFolderPath(int nFolder, bool fCreate)
 
 string GetDefaultDataDir()
 {
-    // Windows: C:\Documents and Settings\username\Application Data\Bitcoin
-    // Mac: ~/Library/Application Support/Bitcoin
-    // Unix: ~/.bitcoin
+    // Windows: C:\Documents and Settings\username\Application Data\tenebrix
+    // Mac: ~/Library/Application Support/tenebrix
+    // Unix: ~/.tenebrix
 #ifdef __WXMSW__
     // Windows
-    return MyGetSpecialFolderPath(CSIDL_APPDATA, true) + "\\Bitcoin";
+    return MyGetSpecialFolderPath(CSIDL_APPDATA, true) + "\\tenebrix";
 #else
     char* pszHome = getenv("HOME");
     if (pszHome == NULL || strlen(pszHome) == 0)
@@ -676,10 +676,10 @@ string GetDefaultDataDir()
     // Mac
     strHome += "Library/Application Support/";
     filesystem::create_directory(strHome.c_str());
-    return strHome + "Bitcoin";
+    return strHome + "tenebrix";
 #else
     // Unix
-    return strHome + ".bitcoin";
+    return strHome + ".tenebrix";
 #endif
 #endif
 }
@@ -708,7 +708,7 @@ void GetDataDir(char* pszDir)
         char* p = pszDir + strlen(pszDir);
         if (p > pszDir && p[-1] != '/' && p[-1] != '\\')
             *p++ = '/';
-        strcpy(p, "tenebrix");
+        strcpy(p, "tenebrix_data");
         nVariation += 2;
     }
     static bool pfMkdir[4];

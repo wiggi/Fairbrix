@@ -139,8 +139,8 @@ MainOptionsPage::MainOptionsPage(QWidget *parent):
 {
     QVBoxLayout *layout = new QVBoxLayout();
 
-    bitcoin_at_startup = new QCheckBox(tr("&Start Bitcoin on window system startup"));
-    bitcoin_at_startup->setToolTip(tr("Automatically start Bitcoin after the computer is turned on"));
+    bitcoin_at_startup = new QCheckBox(tr("&Start Tenebrix on window system startup"));
+    bitcoin_at_startup->setToolTip(tr("Automatically start Tenebrix after the computer is turned on"));
     layout->addWidget(bitcoin_at_startup);
 
     minimize_to_tray = new QCheckBox(tr("&Minimize to the tray instead of the taskbar"));
@@ -148,7 +148,7 @@ MainOptionsPage::MainOptionsPage(QWidget *parent):
     layout->addWidget(minimize_to_tray);
 
     map_port_upnp = new QCheckBox(tr("Map port using &UPnP"));
-    map_port_upnp->setToolTip(tr("Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled."));
+    map_port_upnp->setToolTip(tr("Automatically open the Tenebrix client port on the router. This only works when your router supports UPnP and it is enabled."));
     layout->addWidget(map_port_upnp);
 
     minimize_on_close = new QCheckBox(tr("M&inimize on close"));

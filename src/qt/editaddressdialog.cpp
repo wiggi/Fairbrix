@@ -86,7 +86,7 @@ void EditAddressDialog::accept()
         if(!model->validateAddress(ui->addressEdit->text()))
         {
             QMessageBox::warning(this, windowTitle(),
-                tr("The entered address \"%1\" is not a valid bitcoin address.").arg(ui->addressEdit->text()),
+                tr("The entered address \"%1\" is not a valid Tenebrix address.").arg(ui->addressEdit->text()),
                 QMessageBox::Ok, QMessageBox::Ok);
             return;
         }

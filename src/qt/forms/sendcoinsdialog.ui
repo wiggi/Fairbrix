@@ -110,7 +110,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Enter a Bitcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</string>
+        <string>Enter a Tenebrix address (e.g. tJNrBA3j92GcU3yon7mhmKAUVyUeRYaHMD)</string>
        </property>
       </widget>
      </item>

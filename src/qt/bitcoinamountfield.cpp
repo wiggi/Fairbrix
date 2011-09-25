@@ -25,7 +25,7 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent):
     layout->addWidget(amount);
     layout->addWidget(new QLabel(QString(".")));
     layout->addWidget(decimals);
-    layout->addWidget(new QLabel(QString(" BTC")));
+    layout->addWidget(new QLabel(QString(" TBX")));
     layout->addStretch(1);
     layout->setContentsMargins(0,0,0,0);
 

@@ -1,10 +1,10 @@
-Bitcoin-qt: Qt4 based GUI replacement for Bitcoin
-=================================================
+Tenebrix - a cryptocurrency with solid stance in favor of CPU and against GPU
+PoW based on scrypt
 
-**Warning** **Warning** **Warning**
+Based on multicoin-QT
 
-Pre-alpha stuff! I'm using this client myself on the production network, and I haven't noticed any glitches, but remember: always backup your wallet.
-Testing on the testnet is recommended.
+ATTENTION!!!
+DON'T FORGET TO PLACE tenebrix.conf into your APPDATA or default tenebrix folder (%APPDATA%\tenebrix on Win, ~/.tenebrix/ on Unixes)
 
 This has been implemented:
 

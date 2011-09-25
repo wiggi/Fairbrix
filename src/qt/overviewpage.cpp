@@ -28,7 +28,7 @@ OverviewPage::~OverviewPage()
 
 void OverviewPage::setBalance(qint64 balance)
 {
-    ui->labelBalance->setText(GUIUtil::formatMoney(balance) + QString(" BTC"));
+    ui->labelBalance->setText(GUIUtil::formatMoney(balance) + QString(" TBX"));
 }
 
 void OverviewPage::setNumTransactions(int count)

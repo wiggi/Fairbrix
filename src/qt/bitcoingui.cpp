@@ -150,13 +150,13 @@ void BitcoinGUI::createActions()
     addressBookAction->setCheckable(true);
     tabGroup->addAction(addressBookAction);
 
-    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive coins"), this);
+    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive TBX"), this);
     receiveCoinsAction->setToolTip(tr("Show the list of addresses for receiving payments"));
     receiveCoinsAction->setCheckable(true);
     tabGroup->addAction(receiveCoinsAction);
 
-    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send coins"), this);
-    sendCoinsAction->setToolTip(tr("Send coins to a bitcoin address"));
+    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send TBX"), this);
+    sendCoinsAction->setToolTip(tr("Send TBX to a Tenebrix address"));
     sendCoinsAction->setCheckable(true);
     tabGroup->addAction(sendCoinsAction);
 
@@ -169,11 +169,11 @@ void BitcoinGUI::createActions()
     quitAction = new QAction(QIcon(":/icons/quit"), tr("&Exit"), this);
     quitAction->setToolTip(tr("Quit application"));
     aboutAction = new QAction(QIcon(":/icons/bitcoin"), tr("&About"), this);
-    aboutAction->setToolTip(tr("Show information about Bitcoin"));
+    aboutAction->setToolTip(tr("Show information about Tenebrix"));
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setToolTip(tr("Modify configuration options for bitcoin"));
-    openBitcoinAction = new QAction(QIcon(":/icons/bitcoin"), tr("Open &Bitcoin"), this);
-    openBitcoinAction->setToolTip(tr("Show the Bitcoin window"));
+    optionsAction->setToolTip(tr("Modify configuration options for Tenebrix"));
+    openBitcoinAction = new QAction(QIcon(":/icons/bitcoin"), tr("Open &Tenebrix"), this);
+    openBitcoinAction->setToolTip(tr("Show the Tenebrix window"));
     exportAction = new QAction(QIcon(":/icons/export"), tr("&Export..."), this);
     exportAction->setToolTip(tr("Export data in current view to a file"));
 

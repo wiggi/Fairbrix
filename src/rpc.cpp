@@ -189,6 +189,119 @@ Value getblocknumber(const Array& params, bool fHelp)
     return nBestHeight;
 }
 
+Value getblockbycount(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "getblockbycount height\n"
+            "Dumps the block existing at specified height");
+
+    int64 height = params[0].get_int64();
+    if (height > nBestHeight)
+        throw runtime_error(
+            "getblockbycount height\n"
+            "Dumps the block existing at specified height");
+
+    string blkname = strprintf("blk%d", height);
+
+    CBlockIndex* pindex;
+    bool found = false;
+
+    for (map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.begin();
+         mi != mapBlockIndex.end(); ++mi)
+    {
+    	pindex = (*mi).second;
+	if ((pindex->nHeight == height) && (pindex->IsInMainChain())) {
+		found = true;
+		break;
+	}
+    }
+
+    if (!found)
+        throw runtime_error(
+            "getblockbycount height\n"
+            "Dumps the block existing at specified height");
+
+    CBlock block;
+    block.ReadFromDisk(pindex);
+    block.BuildMerkleTree();
+
+    Object obj;
+    obj.push_back(Pair("hash", block.GetHash().ToString().c_str()));
+    obj.push_back(Pair("version", block.nVersion));
+    obj.push_back(Pair("prev_block", block.hashPrevBlock.ToString().c_str()));
+    obj.push_back(Pair("mrkl_root", block.hashMerkleRoot.ToString().c_str()));
+    obj.push_back(Pair("time", (uint64_t)block.nTime));
+    obj.push_back(Pair("bits", (uint64_t)block.nBits));
+    obj.push_back(Pair("nonce", (uint64_t)block.nNonce));
+    obj.push_back(Pair("n_tx", (int)block.vtx.size()));
+    obj.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK)));
+
+    Array tx;
+    for (int i = 0; i < block.vtx.size(); i++) {
+    	Object txobj;
+
+	txobj.push_back(Pair("hash", block.vtx[i].GetHash().ToString().c_str()));
+	txobj.push_back(Pair("version", block.vtx[i].nVersion));
+	txobj.push_back(Pair("lock_time", (uint64_t)block.vtx[i].nLockTime));
+	txobj.push_back(Pair("size",
+		(int)::GetSerializeSize(block.vtx[i], SER_NETWORK)));
+
+	Array tx_vin;
+	for (int j = 0; j < block.vtx[i].vin.size(); j++) {
+	    Object vino;
+
+	    Object vino_outpt;
+
+	    vino_outpt.push_back(Pair("hash",
+	    	block.vtx[i].vin[j].prevout.hash.ToString().c_str()));
+	    vino_outpt.push_back(Pair("n", (uint64_t)block.vtx[i].vin[j].prevout.n));
+
+	    vino.push_back(Pair("prev_out", vino_outpt));
+
+	    if (block.vtx[i].vin[j].prevout.IsNull())
+	    	vino.push_back(Pair("coinbase", HexStr(
+			block.vtx[i].vin[j].scriptSig.begin(),
+			block.vtx[i].vin[j].scriptSig.end(), false).c_str()));
+	    else
+	    	vino.push_back(Pair("scriptSig", 
+			block.vtx[i].vin[j].scriptSig.ToString().c_str()));
+	    if (block.vtx[i].vin[j].nSequence != UINT_MAX)
+	    	vino.push_back(Pair("sequence", (uint64_t)block.vtx[i].vin[j].nSequence));
+
+	    tx_vin.push_back(vino);
+	}
+
+	Array tx_vout;
+	for (int j = 0; j < block.vtx[i].vout.size(); j++) {
+	    Object vouto;
+
+	    vouto.push_back(Pair("value",
+	    	(double)block.vtx[i].vout[j].nValue / (double)COIN));
+	    vouto.push_back(Pair("scriptPubKey", 
+		block.vtx[i].vout[j].scriptPubKey.ToString().c_str()));
+
+	    tx_vout.push_back(vouto);
+	}
+
+	txobj.push_back(Pair("in", tx_vin));
+	txobj.push_back(Pair("out", tx_vout));
+
+	tx.push_back(txobj);
+    }
+
+    obj.push_back(Pair("tx", tx));
+
+    Array mrkl;
+    for (int i = 0; i < block.vMerkleTree.size(); i++)
+    	mrkl.push_back(block.vMerkleTree[i].ToString().c_str());
+
+    obj.push_back(Pair("mrkl_tree", mrkl));
+
+    return obj;
+}
+
+
 
 Value getconnectioncount(const Array& params, bool fHelp)
 {
@@ -307,7 +420,7 @@ Value getinfo(const Array& params, bool fHelp)
     obj.push_back(Pair("genproclimit",  (int)(fLimitProcessors ? nLimitProcessors : -1)));
     obj.push_back(Pair("difficulty",    (double)GetDifficulty()));
     obj.push_back(Pair("hashespersec",  gethashespersec(params, false)));
-    obj.push_back(Pair("testnet",       fTestNet));
+    obj.push_back(Pair("Tenebrix",       fTestNet));
     obj.push_back(Pair("keypoololdest", (boost::int64_t)pwalletMain->GetOldestKeyPoolTime()));
     obj.push_back(Pair("paytxfee",      ValueFromAmount(nTransactionFee)));
     obj.push_back(Pair("errors",        GetWarnings("statusbar")));
@@ -532,79 +645,7 @@ Value sendtoaddress(const Array& params, bool fHelp)
     return wtx.GetHash().GetHex();
 }
 
-Value sendmultisign(const Array& params, bool fHelp)
-{
-    if (fHelp || params.size() < 2 || params.size() > 4)
-        throw runtime_error(
-            "sendmultisign <multisignaddr> <amount> [comment] [comment-to]\n"
-            "<multisignaddr> is of the form <n>,<addr>,<addr...>\n"
-            "where <n> of the addresses must sign to redeem the multisign\n"
-            "<amount> is a real and is rounded to the nearest 0.00000001"
-            );
 
-    string strAddress = params[0].get_str();
-
-    // Amount
-    int64 nAmount = AmountFromValue(params[1]);
-
-    // Wallet comments
-    CWalletTx wtx;
-    if (params.size() > 2 && params[2].type() != null_type && !params[2].get_str().empty())
-        wtx.mapValue["comment"] = params[2].get_str();
-    if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
-        wtx.mapValue["to"]      = params[3].get_str();
-
-    CRITICAL_BLOCK(cs_main)
-    {
-        string strError = pwalletMain->SendMoneyToMultisign(strAddress, nAmount, wtx);
-        if (strError != "")
-            throw JSONRPCError(-4, strError);
-    }
-
-    return wtx.GetHash().GetHex();
-}
-
-Value redeemmultisign(const Array& params, bool fHelp)
-{
-    if (fHelp || params.size() < 3 || params.size() > 4)
-        throw runtime_error(
-            "redeemmultisign <inputtx> <addr> <amount> [<txhex>]\n"
-            "where <inputtx> is the multisign transaction ID\n"
-            "<addr> is the destination bitcoin address\n"
-            "<txhex> is a partially signed transaction\n"
-            "the output is either ['partial', <txhex>] if more signatures are needed\n"
-            "or ['complete', <txid>] if the transaction was broadcast\n"
-            );
-
-    string strInputTx = params[0].get_str();
-    string strAddress = params[1].get_str();
-
-    // Amount
-    int64 nAmount = AmountFromValue(params[2]);
-
-    string strPartialTx;
-
-    if (params.size() == 4)
-    {
-        strPartialTx = params[3].get_str();
-    }
-
-    uint256 nInputTx;
-    nInputTx.SetHex(strInputTx);
-
-    CWalletTx wtx;
-
-    CRITICAL_BLOCK(cs_main)
-    {
-        pair<string,string> result = pwalletMain->SendMoneyFromMultisign(strAddress, nInputTx, nAmount, strPartialTx, wtx);
-        if (result.first == "error")
-            throw JSONRPCError(-4, result.second);
-        Array ret;
-        ret.push_back(result.first);
-        ret.push_back(result.second);
-        return ret;
-    }
-}
 
 
 Value getreceivedbyaddress(const Array& params, bool fHelp)
@@ -1503,6 +1544,7 @@ pair<string, rpcfn_type> pCallTable[] =
 {
     make_pair("help",                  &help),
     make_pair("stop",                  &stop),
+	make_pair("getblockbycount",       &getblockbycount),
     make_pair("getblockcount",         &getblockcount),
     make_pair("getblocknumber",        &getblocknumber),
     make_pair("getconnectioncount",    &getconnectioncount),
@@ -1539,8 +1581,6 @@ pair<string, rpcfn_type> pCallTable[] =
     make_pair("getwork",               &getwork),
     make_pair("listaccounts",          &listaccounts),
     make_pair("settxfee",              &settxfee),
-    make_pair("sendmultisign",         &sendmultisign),
-    make_pair("redeemmultisign",       &redeemmultisign),
 };
 map<string, rpcfn_type> mapCallTable(pCallTable, pCallTable + sizeof(pCallTable)/sizeof(pCallTable[0]));
 
@@ -2174,8 +2214,6 @@ int CommandLineRPC(int argc, char *argv[])
         if (strMethod == "setgenerate"            && n > 0) ConvertTo<bool>(params[0]);
         if (strMethod == "setgenerate"            && n > 1) ConvertTo<boost::int64_t>(params[1]);
         if (strMethod == "sendtoaddress"          && n > 1) ConvertTo<double>(params[1]);
-        if (strMethod == "sendmultisign"          && n > 1) ConvertTo<double>(params[1]);
-        if (strMethod == "redeemmultisign"        && n > 2) ConvertTo<double>(params[2]);
         if (strMethod == "settxfee"               && n > 0) ConvertTo<double>(params[0]);
         if (strMethod == "getamountreceived"      && n > 1) ConvertTo<boost::int64_t>(params[1]); // deprecated
         if (strMethod == "getreceivedbyaddress"   && n > 1) ConvertTo<boost::int64_t>(params[1]);
@@ -2196,6 +2234,7 @@ int CommandLineRPC(int argc, char *argv[])
         if (strMethod == "sendfrom"               && n > 3) ConvertTo<boost::int64_t>(params[3]);
         if (strMethod == "listtransactions"       && n > 1) ConvertTo<boost::int64_t>(params[1]);
         if (strMethod == "listtransactions"       && n > 2) ConvertTo<boost::int64_t>(params[2]);
+		if (strMethod == "getblockbycount"        && n > 0) ConvertTo<boost::int64_t>(params[0]);
         if (strMethod == "listaccounts"           && n > 0) ConvertTo<boost::int64_t>(params[0]);
         if (strMethod == "sendmany"               && n > 1)
         {

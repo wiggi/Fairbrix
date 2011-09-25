@@ -63,7 +63,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     label = ui->addAsLabel->text();
 
     QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm send coins"),
-                          tr("Are you sure you want to send %1 BTC to %2 (%3)?").arg(GUIUtil::formatMoney(payAmountParsed), label, ui->payTo->text()),
+                          tr("Are you sure you want to send %1 TBX to %2 (%3)?").arg(GUIUtil::formatMoney(payAmountParsed), label, ui->payTo->text()),
           QMessageBox::Yes|QMessageBox::Cancel,
           QMessageBox::Cancel);
 

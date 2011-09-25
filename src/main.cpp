@@ -1,6 +1,9 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Distributed under the MIT/X11 software license, see the accompanying
 // file license.txt or http://www.opensource.org/licenses/mit-license.php.
+//
+//Scrypt GPU-hostile / CPU friendly mining implementation courtesy of ArtForz
+//
 #include "headers.h"
 #include "db.h"
 #include "net.h"
@@ -742,7 +745,7 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
 
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast)
 {
-    const int64 nTargetTimespan = 7 * 24 * 60 * 60; // two weeks
+    const int64 nTargetTimespan = 7 * 24 * 60 * 60; // one week
     const int64 nTargetSpacing = 5 * 60;
     const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
@@ -1390,21 +1393,15 @@ bool CBlock::AcceptBlock()
 
     // Check that the block chain matches the known block chain up to a checkpoint
     if (!fTestNet)
-        if ((nHeight ==  11111 && hash != uint256("0x0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d")) ||
-            (nHeight ==  33333 && hash != uint256("0x000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6")) ||
-            (nHeight ==  68555 && hash != uint256("0x00000000001e1b4903550a0b96e9a9405c8a95f387162e4944e8d9fbe501cd6a")) ||
-            (nHeight ==  70567 && hash != uint256("0x00000000006a49b14bcf27462068f1264c961f11fa2e0eddd2be0791e1d4124a")) ||
-            (nHeight ==  74000 && hash != uint256("0x0000000000573993a3c9e41ce34471c079dcf5f52a0e824a81e7f953b8661a20")) ||
-            (nHeight == 105000 && hash != uint256("0x00000000000291ce28027faea320c8d2b054b2e0fe44a773f3eefb151d6bdc97")) ||
-            (nHeight == 118000 && hash != uint256("0x000000000000774a7f8a7a12dc906ddb9e17e75d684f15e00f8767f9e8f36553")))
+        if ((nHeight == 100 && hash != uint256("0xaa6fbbc5b8885797a180c35918971e40d0459fd4299cbcaae7d3b5d551fa7d70")) ||
+            (nHeight == 152 && hash != uint256("0x7cf7e64cd5c770cf7315bc767e179a61d68815326c163a16b487639c006c9c70")))
             return error("AcceptBlock() : rejected by checkpoint lockin at %d", nHeight);
 
-    printf("-check_block = %d \n",GetArgIntxx(0,"-check_block"));
-    if (GetArgIntxx(0,"-check_block")>0)
-    {
-        if (nHeight == GetArgIntxx(0,"-check_block") && hash != uint256(mapArgs["-check_hash"]))
+   if (fTestNet)
+        if ((nHeight == 100 && hash != uint256("0xaa6fbbc5b8885797a180c35918971e40d0459fd4299cbcaae7d3b5d551fa7d70")) ||
+            (nHeight == 152 && hash != uint256("0x7cf7e64cd5c770cf7315bc767e179a61d68815326c163a16b487639c006c9c70")))
             return error("AcceptBlock() : rejected by checkpoint lockin at %d", nHeight);
-    }
+
     // Write block to history file
     if (!CheckDiskSpace(::GetSerializeSize(*this, SER_DISK)))
         return error("AcceptBlock() : out of disk space");
@@ -1600,15 +1597,15 @@ bool LoadBlockIndex(bool fAllowNew)
         }
         else
         {
-            hashGenesisBlock = uint256("0x00000007199508e34a9ff81e6ec0c477a4cccff2a4767a8eee39c11db367b008");
+            hashGenesisBlock = uint256("0x0f6b7de8de037856768de150f1c32a0a1b3b3fecb620d2afaebc0221181b20eb");
             printf("testnet original hashGenesisBlock assigned for ver 2.20.0 \n");
         }
         //bnProofOfWorkLimit = CBigNum(~uint256(0) >> 28);
         bnProofOfWorkLimit = CBigNum(~uint256(0) >> GetArgIntxx(28,"-ProofOfWorkLimit"));
-        pchMessageStart[0] = GetCharArg(0xfa,"-pscMessageStart0");
-        pchMessageStart[1] = GetCharArg(0xbf,"-pscMessageStart1");
-        pchMessageStart[2] = GetCharArg(0xb5,"-pscMessageStart2");
-        pchMessageStart[3] = GetCharArg(0xda,"-pscMessageStart3");
+        pchMessageStart[0] = GetCharArg(0xf9,"-pscMessageStart0");
+        pchMessageStart[1] = GetCharArg(0xda,"-pscMessageStart1");
+        pchMessageStart[2] = GetCharArg(0xb4,"-pscMessageStart2");
+        pchMessageStart[3] = GetCharArg(0xd9,"-pscMessageStart3");
 
         //pchMessageStart[0] = 0xfa;
         //pchMessageStart[1] = 0xbf;
@@ -1754,7 +1751,7 @@ bool LoadBlockIndex(bool fAllowNew)
         }
         else
         {
-            assert(block.hashMerkleRoot == uint256("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+            assert(block.hashMerkleRoot == uint256("0x4e77ffdc1baa20ffffab9d901f418f7496b2a710e462ac4047accdb8b3b774f9"));
         }
         block.print();
         printf("block.GetHash() = %s \n", block.GetHash().ToString().c_str());
