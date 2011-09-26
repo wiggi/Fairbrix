@@ -6,6 +6,11 @@ Based on multicoin-QT
 ATTENTION!!!
 DON'T FORGET TO PLACE tenebrix.conf into your APPDATA or default tenebrix folder (%APPDATA%\tenebrix on Win, ~/.tenebrix/ on Unixes)
 
+KNOWN BUG ON LINUX: 
+daemon being set to 1 seems to mess with Linux users on Ubuntu and some others. If getting segfaults use daemon=0. 
+IMPORTANT! Windows users benefit from having both Daemon and Server set to 1 (far more responsive GUI)
+
+
 This has been implemented:
 
 - qmake / QtCreator project (.pro)

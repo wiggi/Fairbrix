@@ -53,7 +53,7 @@ void SendCoinsDialog::on_sendButton_clicked()
 
     if(!valid || payAmount.isEmpty())
     {
-        QMessageBox::warning(this, tr("Send Coins"),
+        QMessageBox::warning(this, tr("Send TBX"),
             tr("Must fill in an amount to pay."),
             QMessageBox::Ok, QMessageBox::Ok);
         return;
@@ -62,7 +62,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     // Add address to address book under label, if specified
     label = ui->addAsLabel->text();
 
-    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm send coins"),
+    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm send TBX"),
                           tr("Are you sure you want to send %1 TBX to %2 (%3)?").arg(GUIUtil::formatMoney(payAmountParsed), label, ui->payTo->text()),
           QMessageBox::Yes|QMessageBox::Cancel,
           QMessageBox::Cancel);
@@ -75,25 +75,25 @@ void SendCoinsDialog::on_sendButton_clicked()
     switch(model->sendCoins(ui->payTo->text(), payAmountParsed, label))
     {
     case WalletModel::InvalidAddress:
-        QMessageBox::warning(this, tr("Send Coins"),
+        QMessageBox::warning(this, tr("Send TBX"),
             tr("The recepient address is not valid, please recheck."),
             QMessageBox::Ok, QMessageBox::Ok);
         ui->payTo->setFocus();
         break;
     case WalletModel::InvalidAmount:
-        QMessageBox::warning(this, tr("Send Coins"),
+        QMessageBox::warning(this, tr("Send TBX"),
             tr("The amount to pay must be larger than 0."),
             QMessageBox::Ok, QMessageBox::Ok);
         ui->payAmount->setFocus();
         break;
     case WalletModel::AmountExceedsBalance:
-        QMessageBox::warning(this, tr("Send Coins"),
+        QMessageBox::warning(this, tr("Send TBX"),
             tr("Amount exceeds your balance"),
             QMessageBox::Ok, QMessageBox::Ok);
         ui->payAmount->setFocus();
         break;
     case WalletModel::AmountWithFeeExceedsBalance:
-        QMessageBox::warning(this, tr("Send Coins"),
+        QMessageBox::warning(this, tr("Send TBX"),
             tr("Total exceeds your balance when the %1 transaction fee is included").
             arg(GUIUtil::formatMoney(model->getOptionsModel()->getTransactionFee())),
             QMessageBox::Ok, QMessageBox::Ok);

@@ -37,7 +37,7 @@ public:
      */
     QString labelForAddress(const QString &address) const;
 
-    /* Send coins */
+    /* Send TBX */
     StatusCode sendCoins(const QString &payTo, qint64 payAmount, const QString &addToAddressBookAs=QString());
 private:
     CWallet *wallet;
