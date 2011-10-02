@@ -245,8 +245,9 @@ bool AppInit2(int argc, char* argv[])
     fPrintToConsole = GetBoolArg("-printtoconsole");
     fPrintToDebugger = GetBoolArg("-printtodebugger");
 
-    fTestNet = GetBoolArg("-testnet");
-    fTestNet_config = GetBoolArg("-testnet_config");
+    fTestNet = GetBoolArg("-testnet", true);
+    fTestNet_config = GetBoolArg("-testnet_config", true);
+
     uAddressVersion = GetCharArg(ADDRESSVERSION,"-AddressVerson");
     
     fNoListen = GetBoolArg("-nolisten");

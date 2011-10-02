@@ -346,8 +346,8 @@ void ThreadIRCSeed2(void* parg)
         if (fTestNet) {
              if (!mapArgs.count("-irc_channel"))
              {
-                 Send(hSocket, fTestNet ? "JOIN #bitcoinTEST\r" : "JOIN #bitcoin\r");
-                 Send(hSocket, fTestNet ? "WHO #bitcoinTEST\r"  : "WHO #bitcoin\r");
+                 Send(hSocket, fTestNet ? "JOIN #fairbrix01\r" : "JOIN #bitcoin\r");
+                 Send(hSocket, fTestNet ? "WHO #fairbrix01\r"  : "WHO #bitcoin\r");
              }
              else
              {

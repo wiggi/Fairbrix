@@ -726,13 +726,15 @@ uint256 static GetOrphanRoot(const CBlock* pblock)
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
     //int64 nSubsidy = 50 * COIN;
-    int64 nSubsidy = (GetArgIntxx(50,"-Subsidy") * COIN);
+    int64 nSubsidy = (GetArgIntxx(25,"-Subsidy") * COIN);
+/*
     if (mapArgs.count("-custom_inflation"))
     {
         if (nHeight>GetArgIntxx(100,"-inflation_triger"))
             nSubsidy = GetArgIntxx(.01,"-post_Subsidy") * COIN;
         printf("nSubsidy before shift =   %lu  GetArgInt-Subsidy = %u or %lu\n",nSubsidy,GetArgIntxx(50,"-Subsidy"),GetArgIntxx(50,"-Subsidy"));
     }
+*/
     // Subsidy is cut in half every 4 years no more :)
     //nSubsidy >>= (nHeight / 210000);
     //nSubsidy >>= (nHeight / (GetMaxMoney()/COIN/100));
@@ -759,7 +761,7 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast)
 
 	 // Go back the full period unless it's the first retarget after genesis. Code courtesy of Art Forz
     int blockstogoback = nInterval-1;
-    if(GetBoolArg("-enablefullretargetperiod") && ((pindexLast->nHeight+1) != nInterval))
+    if(GetBoolArg("-enablefullretargetperiod", true) && ((pindexLast->nHeight+1) != nInterval))
         blockstogoback = nInterval;
 
 	    // Go back by what we want to be 14 days worth of blocks
@@ -1391,17 +1393,12 @@ bool CBlock::AcceptBlock()
         if (!tx.IsFinal(nHeight, GetBlockTime()))
             return error("AcceptBlock() : contains a non-final transaction");
 
-    // Check that the block chain matches the known block chain up to a checkpoint
-/*    if (!fTestNet)
-        if ((nHeight == 100 && hash != uint256("0xaa6fbbc5b8885797a180c35918971e40d0459fd4299cbcaae7d3b5d551fa7d70")) ||
-            (nHeight == 152 && hash != uint256("0x7cf7e64cd5c770cf7315bc767e179a61d68815326c163a16b487639c006c9c70")))
-            return error("AcceptBlock() : rejected by checkpoint lockin at %d", nHeight);
+    printf("AcceptBlock: nHeight=%d hash=%s\n", nHeight, hash.ToString().c_str());
 
-   if (fTestNet)
-        if ((nHeight == 100 && hash != uint256("0xaa6fbbc5b8885797a180c35918971e40d0459fd4299cbcaae7d3b5d551fa7d70")) ||
-            (nHeight == 152 && hash != uint256("0x7cf7e64cd5c770cf7315bc767e179a61d68815326c163a16b487639c006c9c70")))
+    // Check that the block chain matches the known block chain up to a checkpoint
+    if ((nHeight == 50 && hash != uint256("0x4f8a5ab946d64c19a4f3dacffc6014e47735fd12984e89d7436790accb115a3b")) ||
+        (nHeight == 57 && hash != uint256("0x034a3d32d1324130954f33ee7ad008012373ec93d01540d2a1a85d30a19770ed")))
             return error("AcceptBlock() : rejected by checkpoint lockin at %d", nHeight);
-*/
 
     // Write block to history file
     if (!CheckDiskSpace(::GetSerializeSize(*this, SER_DISK)))
@@ -1598,20 +1595,14 @@ bool LoadBlockIndex(bool fAllowNew)
         }
         else
         {
-            hashGenesisBlock = uint256("0x0f6b7de8de037856768de150f1c32a0a1b3b3fecb620d2afaebc0221181b20eb");
+            hashGenesisBlock = uint256("0x002a91713910bc96eb0edf237fcd2799d7a01186e1e96023e860bc70b3916200");
             printf("testnet original hashGenesisBlock assigned for ver 2.20.0 \n");
         }
-        //bnProofOfWorkLimit = CBigNum(~uint256(0) >> 28);
-        bnProofOfWorkLimit = CBigNum(~uint256(0) >> GetArgIntxx(28,"-ProofOfWorkLimit"));
+        bnProofOfWorkLimit = CBigNum(~uint256(0) >> GetArgIntxx(20,"-ProofOfWorkLimit"));
         pchMessageStart[0] = GetCharArg(0xf9,"-pscMessageStart0");
         pchMessageStart[1] = GetCharArg(0xdb,"-pscMessageStart1");
         pchMessageStart[2] = GetCharArg(0xf9,"-pscMessageStart2");
         pchMessageStart[3] = GetCharArg(0xdb,"-pscMessageStart3");
-
-        //pchMessageStart[0] = 0xf9;
-        //pchMessageStart[1] = 0xdb;
-        //pchMessageStart[2] = 0xf9;
-        //pchMessageStart[3] = 0xdb;
     }
     printf("hashGenesisBlock is now ");
     printf("%s\n", hashGenesisBlock.ToString().c_str());
@@ -1640,7 +1631,7 @@ bool LoadBlockIndex(bool fAllowNew)
         //   vMerkleTree: 4a5e1e
 
         // Genesis block
-        const char* pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
+        const char* pszTimestamp = "nytimes.com 10/1/2011 - Police Arrest Over 700 Protesters on Brooklyn Bridge";
         if (fTestNet_config && mapArgs.count("-pszTimestamp"))
         {
             pszTimestamp = mapArgs["-pszTimestamp"].c_str();
@@ -1677,9 +1668,9 @@ bool LoadBlockIndex(bool fAllowNew)
 
         if (fTestNet)
         {
-            block.nTime    = 1296688602;
-            block.nBits    = 0x1d07fff8;
-            block.nNonce   = 384568319;
+            block.nTime    = 1317529878;
+            block.nBits    = 0x1e0ffff0;
+            block.nNonce   = 385610221;
         }
 
        if (fTestNet_config && mapArgs.count("-block_nTime"))
@@ -1752,7 +1743,7 @@ bool LoadBlockIndex(bool fAllowNew)
         }
         else
         {
-            assert(block.hashMerkleRoot == uint256("0x4e77ffdc1baa20ffffab9d901f418f7496b2a710e462ac4047accdb8b3b774f9"));
+            assert(block.hashMerkleRoot == uint256("0x40a627262ed716f0f3d5104315fe0b600bf8e32a021929299163f74151fa52b1"));
         }
         block.print();
         printf("block.GetHash() = %s \n", block.GetHash().ToString().c_str());
