@@ -1631,7 +1631,7 @@ bool LoadBlockIndex(bool fAllowNew)
         //   vMerkleTree: 4a5e1e
 
         // Genesis block
-        const char* pszTimestamp = "nytimes.com 10/1/2011 - Police Arrest Over 700 Protesters on Brooklyn Bridge";
+        const char* pszTimestamp = "\"nytimes.com 10/1/2011 - Police Arrest Over 700 Protesters on Brooklyn Bridge\"";
         if (fTestNet_config && mapArgs.count("-pszTimestamp"))
         {
             pszTimestamp = mapArgs["-pszTimestamp"].c_str();
