@@ -150,13 +150,13 @@ void BitcoinGUI::createActions()
     addressBookAction->setCheckable(true);
     tabGroup->addAction(addressBookAction);
 
-    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive TBX"), this);
+    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive FBX"), this);
     receiveCoinsAction->setToolTip(tr("Show the list of addresses for receiving payments"));
     receiveCoinsAction->setCheckable(true);
     tabGroup->addAction(receiveCoinsAction);
 
-    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send TBX"), this);
-    sendCoinsAction->setToolTip(tr("Send TBX to a Tenebrix address"));
+    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send FBX"), this);
+    sendCoinsAction->setToolTip(tr("Send FBX to a Fairbrix address"));
     sendCoinsAction->setCheckable(true);
     tabGroup->addAction(sendCoinsAction);
 
@@ -169,11 +169,11 @@ void BitcoinGUI::createActions()
     quitAction = new QAction(QIcon(":/icons/quit"), tr("&Exit"), this);
     quitAction->setToolTip(tr("Quit application"));
     aboutAction = new QAction(QIcon(":/icons/bitcoin"), tr("&About"), this);
-    aboutAction->setToolTip(tr("Show information about Tenebrix"));
+    aboutAction->setToolTip(tr("Show information about Fairbrix"));
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setToolTip(tr("Modify configuration options for Tenebrix"));
-    openBitcoinAction = new QAction(QIcon(":/icons/bitcoin"), tr("Open &Tenebrix"), this);
-    openBitcoinAction->setToolTip(tr("Show the Tenebrix window"));
+    optionsAction->setToolTip(tr("Modify configuration options for Fairbrix"));
+    openBitcoinAction = new QAction(QIcon(":/icons/bitcoin"), tr("Open &Fairbrix"), this);
+    openBitcoinAction->setToolTip(tr("Show the Fairbrix window"));
     exportAction = new QAction(QIcon(":/icons/export"), tr("&Export..."), this);
     exportAction->setToolTip(tr("Export data in current view to a file"));
 

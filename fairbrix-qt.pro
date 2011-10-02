@@ -8,7 +8,7 @@ CONFIG += no_include_pwd
 # for boost 1.37, add -mt to the boost libraries
 unix:LIBS += -lssl -lcrypto -lboost_system -lboost_filesystem -lboost_program_options -lboost_thread -ldb_cxx
 macx:DEFINES += __WXMAC_OSX__ MSG_NOSIGNAL=0 BOOST_FILESYSTEM_VERSION=3
-macx:LIBS += -lboost_thread-mt
+macx:LIBS += -lboost_system-mt -lboost_filesystem-mt -lboost_program_options-mt -lboost_thread-mt
 windows:DEFINES += __WXMSW__
 windows:LIBS += -lssl -lcrypto -lboost_system-mgw44-mt-1_43 -lboost_filesystem-mgw44-mt-1_43 -lboost_program_options-mgw44-mt-1_43 -lboost_thread-mgw44-mt-1_43 -ldb_cxx -lws2_32 -lgdi32
 
@@ -118,7 +118,9 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/walletmodel.cpp \
     src/bitcoinrpc.cpp \
     src/qt/overviewpage.cpp \
-    src/qt/csvmodelwriter.cpp
+    src/qt/csvmodelwriter.cpp \
+    src/rpc.cpp \
+    src/ui.cpp
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -133,4 +135,6 @@ FORMS += \
 
 CODECFORTR = UTF-8
 TRANSLATIONS = src/qt/locale/bitcoin_nl.ts src/qt/locale/bitcoin_de.ts
+
+
 

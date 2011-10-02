@@ -1925,17 +1925,17 @@ void CSendDialog::OnButtonSend(wxCommandEvent& event)
         int64 nValue = 0;
         if (!ParseMoney(m_textCtrlAmount->GetValue(), nValue) || nValue <= 0)
         {
-            wxMessageBox(_("Error in amount  "), _("Send TBX"));
+            wxMessageBox(_("Error in amount  "), _("Send FBX"));
             return;
         }
         if (nValue > pwalletMain->GetBalance())
         {
-            wxMessageBox(_("Amount exceeds your balance  "), _("Send TBX"));
+            wxMessageBox(_("Amount exceeds your balance  "), _("Send FBX"));
             return;
         }
         if (nValue + nTransactionFee > pwalletMain->GetBalance())
         {
-            wxMessageBox(string(_("Total exceeds your balance when the ")) + FormatMoney(nTransactionFee) + _(" transaction fee is included  "), _("Send TBX"));
+            wxMessageBox(string(_("Total exceeds your balance when the ")) + FormatMoney(nTransactionFee) + _(" transaction fee is included  "), _("Send FBX"));
             return;
         }
 
@@ -1970,7 +1970,7 @@ void CSendDialog::OnButtonSend(wxCommandEvent& event)
             CAddress addr(strAddress);
             if (!addr.IsValid())
             {
-                wxMessageBox(_("Invalid address  "), _("Send TBX"));
+                wxMessageBox(_("Invalid address  "), _("Send FBX"));
                 return;
             }
 
@@ -2722,8 +2722,8 @@ void CMyTaskBarIcon::UpdateTooltip()
 wxMenu* CMyTaskBarIcon::CreatePopupMenu()
 {
     wxMenu* pmenu = new wxMenu;
-    pmenu->Append(ID_TASKBAR_RESTORE, _("&Open Tenebrix"));
-    pmenu->Append(ID_TASKBAR_SEND, _("&Send TBX"));
+    pmenu->Append(ID_TASKBAR_RESTORE, _("&Open Fairbrix"));
+    pmenu->Append(ID_TASKBAR_SEND, _("&Send FBX"));
     pmenu->Append(ID_TASKBAR_OPTIONS, _("O&ptions..."));
 #ifndef __WXMAC_OSX__ // Mac has built-in quit menu
     pmenu->AppendSeparator();

@@ -659,12 +659,12 @@ string MyGetSpecialFolderPath(int nFolder, bool fCreate)
 
 string GetDefaultDataDir()
 {
-    // Windows: C:\Documents and Settings\username\Application Data\tenebrix
-    // Mac: ~/Library/Application Support/tenebrix
-    // Unix: ~/.tenebrix
+    // Windows: C:\Documents and Settings\username\Application Data\fairbrix
+    // Mac: ~/Library/Application Support/fairbrix
+    // Unix: ~/.fairbrix
 #ifdef __WXMSW__
     // Windows
-    return MyGetSpecialFolderPath(CSIDL_APPDATA, true) + "\\tenebrix";
+    return MyGetSpecialFolderPath(CSIDL_APPDATA, true) + "\\fairbrix";
 #else
     char* pszHome = getenv("HOME");
     if (pszHome == NULL || strlen(pszHome) == 0)
@@ -676,10 +676,10 @@ string GetDefaultDataDir()
     // Mac
     strHome += "Library/Application Support/";
     filesystem::create_directory(strHome.c_str());
-    return strHome + "tenebrix";
+    return strHome + "fairbrix";
 #else
     // Unix
-    return strHome + ".tenebrix";
+    return strHome + ".fairbrix";
 #endif
 #endif
 }
@@ -708,7 +708,7 @@ void GetDataDir(char* pszDir)
         char* p = pszDir + strlen(pszDir);
         if (p > pszDir && p[-1] != '/' && p[-1] != '\\')
             *p++ = '/';
-        strcpy(p, "tenebrix_data");
+        strcpy(p, "data");
         nVariation += 2;
     }
     static bool pfMkdir[4];
@@ -729,7 +729,7 @@ string GetDataDir()
 string GetConfigFile()
 {
     namespace fs = boost::filesystem;
-    fs::path pathConfig(GetArg("-conf", "tenebrix.conf"));
+    fs::path pathConfig(GetArg("-conf", "fairbrix.conf"));
     if (!pathConfig.is_complete())
         pathConfig = fs::path(GetDataDir()) / pathConfig;
     return pathConfig.string();
@@ -750,7 +750,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
     
     for (pod::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
     {
-        // Don't overwrite existing settings so command line settings override tenebrix.conf
+        // Don't overwrite existing settings so command line settings override fairbrix.conf
         string strKey = string("-") + it->string_key;
         if (mapSettingsRet.count(strKey) == 0)
             mapSettingsRet[strKey] = it->value[0];

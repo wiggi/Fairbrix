@@ -96,7 +96,7 @@ int GetCoinbase_maturity()
     if (fTestNet_config && mapArgs.count("-coinbase_maturity"))
        {
            int ncoinbase_maturity = atoi(mapArgs["-coinbase_maturity"]);
-           //printf("COINBASE_MATURITY = %u set in config tenebrix.config \n",ncoinbase_maturity);          
+           //printf("COINBASE_MATURITY = %u set in config fairbrix.config \n",ncoinbase_maturity);
            return atoi(mapArgs["-coinbase_maturity"]);                    
        }
        else
@@ -115,7 +115,7 @@ int GetArgIntxx(int udefault, const char* argument)
         stringstream convert(mapArgs[argument]);
         if ( !(convert >> uvalue)) 
             uvalue = 0;
-        printf("argument %s  found in tenebrix.conf with uint %u being used  \n",argument,uvalue);
+        printf("argument %s  found in fairbrix.conf with uint %u being used  \n",argument,uvalue);
         return uvalue;
     }
     return udefault;
@@ -131,7 +131,7 @@ int64 GetArgmInt64(int64 udefault,const char* argument)
         stringstream convert(mapArgs[argument]);
         if ( !(convert >> uvalue)) 
             uvalue = 0;
-        printf("argument %s  found in tenebrix.conf with uint %u being used  \n",argument,uvalue);
+        printf("argument %s  found in fairbrix.conf with uint %u being used  \n",argument,uvalue);
         return uvalue;
     }
     return udefault;
@@ -146,7 +146,7 @@ char* GetArgString(const char* strdefault,const char* argument)
         char * strFound;
         //strcpy(strFound, mapArgs[argument]); 
         strFound = mapArgs[argument].c_str;  
-        printf("argument %s found in tenebrix.conf with string %s being used \n",argument,strFound);
+        printf("argument %s found in fairbrix.conf with string %s being used \n",argument,strFound);
         //return mapArgs[argument];
         return strFound;
     }
@@ -443,7 +443,7 @@ bool CTransaction::AcceptToMemoryPool(CTxDB& txdb, bool fCheckInputs, bool* pfMi
 
 
     // Rather not work on nonstandard transactions
-    // to enable running scripts add -nonstandard in tenebrix.conf by sacarlson
+    // to enable running scripts add -nonstandard in fairbrix.conf by sacarlson
     if (!fTestNet && !IsStandard())
     {
         if (!mapArgs.count("-nonstandard"))
@@ -1392,7 +1392,7 @@ bool CBlock::AcceptBlock()
             return error("AcceptBlock() : contains a non-final transaction");
 
     // Check that the block chain matches the known block chain up to a checkpoint
-    if (!fTestNet)
+/*    if (!fTestNet)
         if ((nHeight == 100 && hash != uint256("0xaa6fbbc5b8885797a180c35918971e40d0459fd4299cbcaae7d3b5d551fa7d70")) ||
             (nHeight == 152 && hash != uint256("0x7cf7e64cd5c770cf7315bc767e179a61d68815326c163a16b487639c006c9c70")))
             return error("AcceptBlock() : rejected by checkpoint lockin at %d", nHeight);
@@ -1401,6 +1401,7 @@ bool CBlock::AcceptBlock()
         if ((nHeight == 100 && hash != uint256("0xaa6fbbc5b8885797a180c35918971e40d0459fd4299cbcaae7d3b5d551fa7d70")) ||
             (nHeight == 152 && hash != uint256("0x7cf7e64cd5c770cf7315bc767e179a61d68815326c163a16b487639c006c9c70")))
             return error("AcceptBlock() : rejected by checkpoint lockin at %d", nHeight);
+*/
 
     // Write block to history file
     if (!CheckDiskSpace(::GetSerializeSize(*this, SER_DISK)))
@@ -1593,7 +1594,7 @@ bool LoadBlockIndex(bool fAllowNew)
         if (fTestNet_config && mapArgs.count("-genesisblock"))
         {
             hashGenesisBlock = uint256(mapArgs["-genesisblock"]);
-            printf("hashGenesisBlock custom configured by -genesisblock in tenebrix.conf \n");
+            printf("hashGenesisBlock custom configured by -genesisblock in fairbrix.conf \n");
         }
         else
         {
@@ -1603,14 +1604,14 @@ bool LoadBlockIndex(bool fAllowNew)
         //bnProofOfWorkLimit = CBigNum(~uint256(0) >> 28);
         bnProofOfWorkLimit = CBigNum(~uint256(0) >> GetArgIntxx(28,"-ProofOfWorkLimit"));
         pchMessageStart[0] = GetCharArg(0xf9,"-pscMessageStart0");
-        pchMessageStart[1] = GetCharArg(0xda,"-pscMessageStart1");
-        pchMessageStart[2] = GetCharArg(0xb4,"-pscMessageStart2");
-        pchMessageStart[3] = GetCharArg(0xd9,"-pscMessageStart3");
+        pchMessageStart[1] = GetCharArg(0xdb,"-pscMessageStart1");
+        pchMessageStart[2] = GetCharArg(0xf9,"-pscMessageStart2");
+        pchMessageStart[3] = GetCharArg(0xdb,"-pscMessageStart3");
 
-        //pchMessageStart[0] = 0xfa;
-        //pchMessageStart[1] = 0xbf;
-        //pchMessageStart[2] = 0xb5;
-        //pchMessageStart[3] = 0xda;
+        //pchMessageStart[0] = 0xf9;
+        //pchMessageStart[1] = 0xdb;
+        //pchMessageStart[2] = 0xf9;
+        //pchMessageStart[3] = 0xdb;
     }
     printf("hashGenesisBlock is now ");
     printf("%s\n", hashGenesisBlock.ToString().c_str());
@@ -1687,7 +1688,7 @@ bool LoadBlockIndex(bool fAllowNew)
             stringstream convert(mapArgs["-block_nTime"]);
             if ( !(convert >> block.nTime)) 
                 block.nTime = 0;
-            printf("block.nTime custom configured by -block_nTime in tenebrix.conf \n");
+            printf("block.nTime custom configured by -block_nTime in fairbrix.conf \n");
        }
              
        if (fTestNet_config && mapArgs.count("-block_nBits"))
@@ -1695,7 +1696,7 @@ bool LoadBlockIndex(bool fAllowNew)
            stringstream convert(mapArgs["-block_nBits"]);
            if ( !(convert >> block.nBits)) 
                block.nBits = 0;
-           printf("block.nBits custom configured by -block_nBits in tenebrix.conf \n");
+           printf("block.nBits custom configured by -block_nBits in fairbrix.conf \n");
        }
          
        if (fTestNet_config && mapArgs.count("-block_nNonce"))
@@ -1703,7 +1704,7 @@ bool LoadBlockIndex(bool fAllowNew)
            stringstream convert(mapArgs["-block_nNonce"]);
            if ( !(convert >> block.nNonce)) 
                block.nNonce = 0;
-           printf("block.nNonce custom configured by -block_nNonce in tenebrix.conf \n");
+           printf("block.nNonce custom configured by -block_nNonce in fairbrix.conf \n");
        }
          
        printf("block.nTime = %u \n", block.nTime);
@@ -1747,7 +1748,7 @@ bool LoadBlockIndex(bool fAllowNew)
         if (fTestNet_config && mapArgs.count("-block_hashMerkleRoot"))
         {
             assert(block.hashMerkleRoot == uint256(mapArgs["-block_hashMerkleRoot"].c_str()));
-            printf("block.hashMerkleRoot custom configured by -block_hashMerkleRoot in tenebrix.conf \n");
+            printf("block.hashMerkleRoot custom configured by -block_hashMerkleRoot in fairbrix.conf \n");
         }
         else
         {

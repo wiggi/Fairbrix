@@ -1,10 +1,10 @@
-Tenebrix - a cryptocurrency with solid stance in favor of CPU and against GPU
+Fairbrix - a cryptocurrency with solid stance in favor of CPU and against GPU
 PoW based on scrypt
 
 Based on multicoin-QT
 
 ATTENTION!!!
-DON'T FORGET TO PLACE tenebrix.conf into your APPDATA or default tenebrix folder (%APPDATA%\tenebrix on Win, ~/.tenebrix/ on Unixes)
+DON'T FORGET TO PLACE fairbrix.conf into your APPDATA or default fairbrix folder (%APPDATA%\fairbrix on Win, ~/.fairbrix/ on Unixes)
 
 KNOWN BUG ON LINUX: 
 daemon being set to 1 seems to mess with Linux users on Ubuntu and some others. If getting segfaults use daemon=0. 

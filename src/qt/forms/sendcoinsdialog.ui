@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Send TBX</string>
+   <string>Send FBX</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -24,7 +24,7 @@
        <item>
         <widget class="QLineEdit" name="payTo">
          <property name="toolTip">
-          <string>The address to send the payment to  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</string>
+          <string>The address to send the payment to  (e.g. fca1JykZfJ85MiX8JfGuyKYQ3pkpjsafBg)</string>
          </property>
          <property name="maxLength">
           <number>44</number>
@@ -110,7 +110,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Enter a Tenebrix address (e.g. tJNrBA3j92GcU3yon7mhmKAUVyUeRYaHMD)</string>
+        <string>Enter a Fairbrix address (e.g. fca1JykZfJ85MiX8JfGuyKYQ3pkpjsafBg)</string>
        </property>
       </widget>
      </item>
