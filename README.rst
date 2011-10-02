@@ -4,7 +4,9 @@ PoW based on scrypt
 Based on multicoin-QT
 
 ATTENTION!!!
-DON'T FORGET TO PLACE fairbrix.conf into your APPDATA or default fairbrix folder (%APPDATA%\fairbrix on Win, ~/.fairbrix/ on Unixes)
+DON'T FORGET TO PLACE fbx.conf into your APPDATA or default fairbrix folder (%APPDATA%\fairbrix on Win, ~/.fairbrix/ on Unixes)
+
+The port and portsend value are 8591 by default. So you may want to open that port on your router.
 
 KNOWN BUG ON LINUX: 
 daemon being set to 1 seems to mess with Linux users on Ubuntu and some others. If getting segfaults use daemon=0. 
