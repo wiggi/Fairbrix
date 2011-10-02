@@ -468,10 +468,10 @@ inline unsigned char GetCharArg(unsigned char udefault, const std::string& strAr
         //stringstream convert(mapArgs[argument]);
         //if ( !(convert >> uvalue)) 
         //    uvalue = 0;
-        //printf("argument %s  found in fairbrix.conf with uint %u being used  \n",strArg,uvalue);
+        //printf("argument %s  found in fbx.conf with uint %u being used  \n",strArg,uvalue);
         return uvalue;
     }
-    //printf("argument %s  NOT found in fairbrix.conf so default uint %u being used  \n",strArg,udefault);
+    //printf("argument %s  NOT found in fbx.conf so default uint %u being used  \n",strArg,udefault);
     return udefault;
 }
 

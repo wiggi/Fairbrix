@@ -729,7 +729,7 @@ string GetDataDir()
 string GetConfigFile()
 {
     namespace fs = boost::filesystem;
-    fs::path pathConfig(GetArg("-conf", "fairbrix.conf"));
+    fs::path pathConfig(GetArg("-conf", "fbx.conf"));
     if (!pathConfig.is_complete())
         pathConfig = fs::path(GetDataDir()) / pathConfig;
     return pathConfig.string();
@@ -750,7 +750,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
     
     for (pod::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
     {
-        // Don't overwrite existing settings so command line settings override fairbrix.conf
+        // Don't overwrite existing settings so command line settings override fbx.conf
         string strKey = string("-") + it->string_key;
         if (mapSettingsRet.count(strKey) == 0)
             mapSettingsRet[strKey] = it->value[0];
