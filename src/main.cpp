@@ -901,8 +901,11 @@ bool CTransaction::DisconnectInputs(CTxDB& txdb)
     }
 
     // Remove transaction from index
+    // This can fail if a duplicate of this transaction was in a chain that got
+    // reorganized away. This is only possible if this transaction was completely
+    // spent, so erasing it would be a no-op anway.
     if (!txdb.EraseTxIndex(*this))
-        return error("DisconnectInputs() : EraseTxPos failed");
+        printf("DisconnectInputs() : EraseTxPos failed!!!\n");
 
     return true;
 }
@@ -1097,6 +1100,27 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex)
     // Check it again in case a previous version let a bad block in
     if (!CheckBlock())
         return false;
+
+    // Do not allow blocks that contain transactions which 'overwrite' older transactions,
+    // unless those are already completely spent.
+    // If such overwrites are allowed, coinbases and transactions depending upon those
+    // can be duplicated to remove the ability to spend the first instance -- even after
+    // being sent to another address.
+    // See BIP30 and http://r6.ca/blog/20120206T005236Z.html for more information.
+    // This logic is not necessary for memory pool transactions, as AcceptToMemoryPool
+    // already refuses previously-known transaction id's entirely.
+    // This rule applies to all blocks whose timestamp is after March 15, 2012, 0:00 UTC.
+    BOOST_FOREACH(CTransaction& tx, vtx)
+    {
+        CTxIndex txindexOld;
+            if (txdb.ReadTxIndex(tx.GetHash(), txindexOld))
+                BOOST_FOREACH(CDiskTxPos &pos, txindexOld.vSpent)
+                    if (pos.IsNull())
+                        if (pindex->nTime > 1331769600)
+                            return error("ConnectBlock() : transaction overwrite!!!");
+                        else
+                            printf("ConnectBlock() : transaction overwrite\n");
+    }
 
     //// issue here: it doesn't know the version
     unsigned int nTxPos = pindex->nBlockPos + ::GetSerializeSize(CBlock(), SER_DISK) - 1 + GetSizeOfCompactSize(vtx.size());
@@ -1365,6 +1389,16 @@ bool CBlock::CheckBlock() const
         if (!tx.CheckTransaction())
             return error("CheckBlock() : CheckTransaction failed");
 
+    // Check for duplicate txids. This is caught by ConnectInputs(),
+    // but catching it earlier avoids a potential DoS attack:
+    set<uint256> uniqueTx;
+    BOOST_FOREACH(const CTransaction& tx, vtx)
+    {
+        uniqueTx.insert(tx.GetHash());
+    }
+    if (uniqueTx.size() != vtx.size())
+        return error("CheckBlock() : duplicate transaction!!!");
+
     // Check that it's not full of nonstandard transactions
     if (GetSigOpCount() > MAX_BLOCK_SIGOPS)
         return error("CheckBlock() : too many nonstandard transactions");
@@ -1409,8 +1443,22 @@ bool CBlock::AcceptBlock()
     if ((nHeight == 50 && hash != uint256("0x4f8a5ab946d64c19a4f3dacffc6014e47735fd12984e89d7436790accb115a3b")) ||
         (nHeight == 57 && hash != uint256("0x034a3d32d1324130954f33ee7ad008012373ec93d01540d2a1a85d30a19770ed")) ||
         (nHeight == 5000 && hash != uint256("0x9289ee81e679e10e6ed01232e70c19c9ef9682a38489227cd521a0136649b1ad")) ||
-        (nHeight == 15000 && hash != uint256("0x7c7fc755c19616fd3eb156b53dae2bbf058972e0731f3d0ee54785cc222f4bbf")))
-            return error("AcceptBlock() : rejected by checkpoint lockin at %d", nHeight);
+        (nHeight == 15000 && hash != uint256("0x7c7fc755c19616fd3eb156b53dae2bbf058972e0731f3d0ee54785cc222f4bbf")) ||
+        (nHeight == 114000 && hash != uint256("0xf863ed327eede0641e1be668d43144e67c52c0785524faff2dd1a21bbdeabfbe")) ||
+        (nHeight == 116144 && hash != uint256("0x7d0f9db5dbb9378ddd5bdd173b3c71fef8808690adec8ecc0bbb1b3648871b76")) ||
+        (nHeight == 120000 && hash != uint256("0x8eba390707d2de0af87f7f6c1e191de995a351d3cb1ac1667d83c207f4580217")) ||
+        (nHeight == 123340 && hash != uint256("0xfc425e4e4044bb8016a5bf7a3a8daaf5e5753017cd82c76cb8f168791b5b1986")))
+    {
+        return error("AcceptBlock() : rejected by checkpoint lockin at %d !!!", nHeight);
+    }
+    else
+    {
+        if ((nHeight == 114000) ||
+            (nHeight == 116144) ||
+            (nHeight == 120000) ||
+            (nHeight == 123340))
+        printf("AcceptBlock() : passed checkpoint lockin at %d\n", nHeight);
+    }
 
     // Write block to history file
     if (!CheckDiskSpace(::GetSerializeSize(*this, SER_DISK)))
