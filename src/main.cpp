@@ -1447,7 +1447,10 @@ bool CBlock::AcceptBlock()
         (nHeight == 114000 && hash != uint256("0xf863ed327eede0641e1be668d43144e67c52c0785524faff2dd1a21bbdeabfbe")) ||
         (nHeight == 116144 && hash != uint256("0x7d0f9db5dbb9378ddd5bdd173b3c71fef8808690adec8ecc0bbb1b3648871b76")) ||
         (nHeight == 120000 && hash != uint256("0x8eba390707d2de0af87f7f6c1e191de995a351d3cb1ac1667d83c207f4580217")) ||
-        (nHeight == 123340 && hash != uint256("0xfc425e4e4044bb8016a5bf7a3a8daaf5e5753017cd82c76cb8f168791b5b1986")))
+        (nHeight == 123340 && hash != uint256("0xfc425e4e4044bb8016a5bf7a3a8daaf5e5753017cd82c76cb8f168791b5b1986")) ||
+        (nHeight == 125000 && hash != uint256("0x24d37d00a27106edb6acd213914b89c64396eef2a8e7957d22a46779b1300d9f")) ||
+        (nHeight == 125882 && hash != uint256("0x350844dc30528e80f61ec00abb6c822493d401a165e0ef94ee0667ef8b76cf96")) ||
+        (nHeight == 128935 && hash != uint256("0x6272ad45f8a3933718635c81eaf89a8c1271dea1f8ac776db091b6f7109be390")))
     {
         return error("AcceptBlock() : rejected by checkpoint lockin at %d !!!", nHeight);
     }
@@ -1456,7 +1459,10 @@ bool CBlock::AcceptBlock()
         if ((nHeight == 114000) ||
             (nHeight == 116144) ||
             (nHeight == 120000) ||
-            (nHeight == 123340))
+            (nHeight == 123340) ||
+            (nHeight == 125000) ||
+            (nHeight == 125882) ||
+            (nHeight == 128935))
         printf("AcceptBlock() : passed checkpoint lockin at %d\n", nHeight);
     }
 
