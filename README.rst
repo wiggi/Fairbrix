@@ -1,43 +1,30 @@
-Fairbrix - a cryptocurrency with solid stance in favor of CPU and against GPU
-PoW based on scrypt
+Fairbrix - a cryptocurrency optimized for CPU mining using scrypt as a proof of work scheme.
+ - 5 minute block targets
+ - 25 coins per block (constant forever)
+ - 2016 blocks (1 week) to retarget difficulty
+This version (Fairbrix 0.3.27) is based on on multicoin-QT.
 
-Based on multicoin-QT
+
 
 ATTENTION!!!
 DON'T FORGET TO PLACE fbx.conf into your APPDATA or default fairbrix folder (%APPDATA%\fairbrix on Win, ~/.fairbrix/ on Unixes)
 
 The port and portsend value are 8591 by default. So you may want to open that port on your router.
 
-KNOWN BUG ON LINUX: 
-daemon being set to 1 seems to mess with Linux users on Ubuntu and some others. If getting segfaults use daemon=0. 
+
+
+Fairbrix 0.3.x known bugs:
+
+- Linux: daemon being set to 1 seems to mess with Linux users on Ubuntu and some others. If getting segfaults use daemon=0.
+- Windows qt-client: unresponsive while sending large transactions (can take several minutes)
+- Windows qt-client: ignores newly available connections if already running
+- Windows qt-client: not displaying UI after being minimized
+  (it doesn't actually crash, double click on notification area symbol to "wake it up" again)
+- normally hidden "change" part of transactions visible in transactions list
+  after restoring old (>100 transactions/mined blocks) wallet backup
+
 IMPORTANT! Windows users benefit from having both Daemon and Server set to 1 (far more responsive GUI)
 
-
-This has been implemented:
-
-- qmake / QtCreator project (.pro)
-
-- Compatibility with Linux (both GNOME and KDE), MacOSX and Windows
-
-- All functionality of the original client, including taskbar icon/menu
-
-- Tabbed interface
-
-- Asks for confirmation before sending coins
-
-- CSV export of transactions
-
-- User friendly transaction list with status icons, and real-time filtering
-
-- Show alternative icon when on testnet
-
-- Progress bar on initial block download
-
-This has to be done:
-
-- Start at system start
-
-- Internationalization (convert WX language files)
 
 
 Build instructions 
@@ -53,7 +40,7 @@ distribution are installed, for Debian and Ubuntu these are:
 
     apt-get install qt4-qmake libqt4-dev build-essential libboost-dev libboost-system-dev \
         libboost-filesystem-dev libboost-program-options-dev libboost-thread-dev \
-        libssl-dev libdb4.8++-dev
+        libssl-dev libdb++-dev
 
 then execute the following:
 
