@@ -1,3 +1,15 @@
+New version available
+======================
+
+This version (Fairbrix 0.3.27.78) is outdated and should no longer be used.
+
+A new version is here: https://github.com/wiggi/fairbrix-0.8-coincontrol
+
+
+
+Old readme for Fairbrix 0.3
+============================
+
 Fairbrix - a cryptocurrency optimized for CPU mining using scrypt as a proof of work scheme.
  - 5 minute block targets
  - 25 coins per block (constant forever)
